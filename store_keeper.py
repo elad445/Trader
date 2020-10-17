@@ -1,37 +1,39 @@
-import talib
 import yfinance as yf
 import os
-import datetime
+
 
 class StoreKeeper:
     """
-    Stores data about stocks from yfinance library in files stores in local folder
+    Stores and fetches data about stocks from yfinance library in files stores in local folder.
     """
 
-    FOLDER_DEFAULT_NAME = 'Tickers'
-    folder_index = 0
+    ROOT_FOLDER = 'Store Keepers'
+    store_keeper_index = 0
 
-    def __init__(self, tickers=['AAPL']):
-        self.tickers = tickers
-
-    def write_data_to_file(self, folder_name=None):
+    def __init__(self):
         """
-        This function stores data about a share taken from the web crawler via yfinanace and stores it into a local file.
+        - Creates local folder
+        - Creates meta-data file
+        """
+        pass
+
+    def _download(self, ticker):
+        """
+        Stores data on tickers via yfinance library
         """
 
         PATH = os.getcwd() + os.path.sep
+        folder_name = ticker
 
-        # default name of folder if name was not given
-        if not folder_name:
-            name = StoreKeeper.FOLDER_DEFAULT_NAME + str(StoreKeeper.folder_index)
-            StoreKeeper.folder_index += 1  # increase folder index for next folder
+        name = StoreKeeper.ROOT_FOLDER + str(StoreKeeper.store_keeper_index)
+        StoreKeeper.store_keeper_index += 1  # increase folder index for next folder
         os.mkdir(PATH + folder_name)
 
         for ticker in self.tickers:
             file_name = folder_name + ticker
 
             # get data from yfinance
-            data = yf.download(ticker, start="2015-05-01")
+            data = yf.download(ticker)
 
             # store data into file
             with open(file_name, 'w') as data_file:
@@ -56,9 +58,9 @@ class StoreKeeper:
 
         return line_list
 
-    def get_data_from_file(self, file=None):    #  FIXME: file argument
+    def _get_data(self, tickers):
         """
-        This function converts a data file from yfinance, into a dictionary
+        Retrieves data from existing files / newly created with given ticker data combination.
         """
 
         data = {}
@@ -90,6 +92,8 @@ class StoreKeeper:
 
         return data
 
-
-keeper = StoreKeeper()
-keeper.write_data_to_file()
+    def _update_files(self, files):
+        """
+        updates all --files to current time
+        """
+        pass
