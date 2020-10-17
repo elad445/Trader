@@ -12,6 +12,7 @@ class TA:
     # this function inserts 2 columns to dataframe. stochastic fast/slow.
     def generate_stochastics(self, dataframe, slow, fast, days):
         info_tuple = talib._ta_lib.STOCH(dataframe["High"], dataframe["Low"], dataframe["Close"], slow, fast, 0, days, 0)
+        # talib returns tuple with stoch. high and stoch. low. convert to np array and poach each tuple to insert to dataframe
         np.asarray(info_tuple)
         stoch_slow_list = info_tuple[0]
         stoch_fast_list = info_tuple[1]
